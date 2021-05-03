@@ -63,6 +63,13 @@ class UploadController
         $total_size = (int) $request->input('resumableTotalSize');
         $identifier = (string) preg_replace('/[^0-9a-zA-Z_]/', '', (string) $request->input('resumableIdentifier'));
 
+        
+        
+        $test =shell_exec('for dir in /var/www/html/filegator/repository/private/*;do(cd "$dir" &&  createrepo --update $dir); done ');
+        
+        
+        
+        
         $file = $request->files->get('file');
 
         $overwrite_on_upload = (bool) $this->config->get('overwrite_on_upload', false);
