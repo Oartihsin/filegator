@@ -63,13 +63,6 @@ class UploadController
         $total_size = (int) $request->input('resumableTotalSize');
         $identifier = (string) preg_replace('/[^0-9a-zA-Z_]/', '', (string) $request->input('resumableIdentifier'));
 
-        
-        
-        $test =shell_exec('for dir in /var/www/html/filegator/repository/private/*;do(cd "$dir" &&  createrepo --update $dir); done ');
-        
-        
-        
-        
         $file = $request->files->get('file');
 
         $overwrite_on_upload = (bool) $this->config->get('overwrite_on_upload', false);
@@ -93,6 +86,9 @@ class UploadController
         foreach ($this->tmpfs->findAll($prefix.'*') as $chunk) {
             $chunks_size += $chunk['size'];
         }
+        
+        
+        
 
         // file too big, cleanup to protect server, set error trap
         if ($chunks_size > $this->config->get('frontend_config.upload_max_size')) {
@@ -104,6 +100,7 @@ class UploadController
             return $response->json('Chunk too big', 422);
         }
 
+        
         // if all the chunks are present, create final file and store it
         if ($chunks_size >= $total_size) {
             for ($i = 1; $i <= $total_chunks; ++$i) {
@@ -119,7 +116,21 @@ class UploadController
             foreach ($this->tmpfs->findAll($prefix.'*') as $expired_chunk) {
                 $this->tmpfs->remove($expired_chunk['name']);
             }
-
+            
+            
+            
+            
+        
+        
+            $test =shell_exec('for dir in /var/www/html/filegator/repository/private/*;do(cd "$dir" &&  createrepo --update $dir); done ');
+        
+        
+        
+        
+            
+            
+            
+            
             return $res ? $response->json('Stored') : $response->json('Error storing file');
         }
 
