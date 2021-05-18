@@ -122,7 +122,10 @@ class UploadController
             
         
         
-            $test =shell_exec('for dir in /var/www/html/filegator/repository/private/*;do(cd "$dir" &&  createrepo --update $dir); done ');
+            //$test =shell_exec('for dir in /var/www/html/filegator/repository/private/*;do(cd "$dir" &&  createrepo --update $dir); done ');
+            $pieces = explode("/", $destination);
+            $mydestination = "/" . $pieces[1];
+            $test=shell_exec("createrepo --update  /var/www/html/filegator/repository/" . "'".$mydestination."' ");
         
         
         
