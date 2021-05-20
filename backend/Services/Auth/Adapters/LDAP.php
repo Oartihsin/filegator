@@ -45,6 +45,15 @@ class LDAP implements Service, AuthInterface
 
         if (!extension_loaded('ldap')) throw new \Exception('ldap extension missing');
 
+        
+        
+        
+        putenv('LDAPTLS_REQCERT=never');
+        
+        
+        
+        
+        
         if($connect=ldap_connect($config['ldap_server'])){
                 ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3);
                 $this->private_repos = $config['private_repos'];
