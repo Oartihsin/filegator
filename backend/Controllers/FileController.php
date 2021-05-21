@@ -165,7 +165,12 @@ class FileController
             }
             if ($item->type == 'file') {
                 $this->storage->deleteFile($item->path);
-            }
+                $pieces = explode("/", $item->path);
+                $mydestination = "/" . $pieces[1];
+//              $test=shell_exec("echo '".$mydestination."'>>/var/www/example.com/public_html/filegator/repository/sample.txt");
+                $test=shell_exec("createrepo --update  /var/www/html/filegator/repository/" . "'".$mydestination."' ");
+
+                }
         }
 
         return $response->json('Done');
