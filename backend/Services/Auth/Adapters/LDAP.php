@@ -183,15 +183,17 @@ class LDAP implements Service, AuthInterface
 
             $users = [];
 
-            for ($item = 0; $item < $ldapResults['count']; $item++)
+            for ($item = 0; $item < $ldapResults[0]['memberuid']['count']; $item++)
             {
                 $user = [];
-                $user['username']  = $ldapResults[$item][$this->ldap_userFieldMapping['username']][0];
-                $user['name']      = $ldapResults[$item][$this->ldap_userFieldMapping['name']][0];
+                
+                //$user['username']  = $ldapResults[$item][$this->ldap_userFieldMapping['username']][0];
+                $user['username']  = $ldapResults[0]['memberuid'][$item];
+                $user['name']      = $ldapResults[0]['memberuid'][$item];
                 $user['role']      = 'user';
                 $user['homedir']   = '/';
                 $user['permissions']=$this->ldap_userFieldMapping['default_permissions'];
-                $user['userDN'] = $ldapResults[$item][$this->ldap_userFieldMapping['userDN']];
+                $user['userDN'] = 'uid='.$ldapResults[0]['memberuid'][$item].',cn=users,cn=compat,dc=eigbox,dc=com';
 
                 if(is_array($this->ldap_userFieldMapping['admin_usernames']))
                 {
