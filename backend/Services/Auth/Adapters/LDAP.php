@@ -45,15 +45,6 @@ class LDAP implements Service, AuthInterface
 
         if (!extension_loaded('ldap')) throw new \Exception('ldap extension missing');
 
-        
-        
-        
-        putenv('LDAPTLS_REQCERT=never');
-        
-        
-        
-        
-        
         if($connect=ldap_connect($config['ldap_server'])){
                 ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3);
                 $this->private_repos = $config['private_repos'];
@@ -177,7 +168,7 @@ class LDAP implements Service, AuthInterface
             if (!$ldapBind) throw new \Exception('Cannot Bind to LDAP server: Wrong credentials?');
 
             // search the LDAP server for users
-            $ldapSearch  = @ldap_search($ldapConn, $this->ldap_baseDN, $this->ldap_filter, $this->ldap_attributes);
+            $ldapSearch  = @ldap_search($ldapConn, $this->ldap_baseDN, $this->ldap_filter);
             $ldapResults = @ldap_get_entries($ldapConn, $ldapSearch);
             @ldap_close($ldapConn);
 
@@ -186,14 +177,12 @@ class LDAP implements Service, AuthInterface
             for ($item = 0; $item < $ldapResults[0]['memberuid']['count']; $item++)
             {
                 $user = [];
-                
-                //$user['username']  = $ldapResults[$item][$this->ldap_userFieldMapping['username']][0];
                 $user['username']  = $ldapResults[0]['memberuid'][$item];
                 $user['name']      = $ldapResults[0]['memberuid'][$item];
                 $user['role']      = 'user';
                 $user['homedir']   = '/';
                 $user['permissions']=$this->ldap_userFieldMapping['default_permissions'];
-                $user['userDN'] = 'uid='.$ldapResults[0]['memberuid'][$item].',cn=users,cn=compat,dc=eigbox,dc=com';
+                $user['userDN'] ="uid=".$ldapResults[0]['memberuid'][$item].",cn=users,cn=accounts,dc=eigbox,dc=com";
 
                 if(is_array($this->ldap_userFieldMapping['admin_usernames']))
                 {
@@ -237,3 +226,4 @@ class LDAP implements Service, AuthInterface
     return false;
     }
 }
+
